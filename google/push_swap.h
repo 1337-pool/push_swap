@@ -53,9 +53,9 @@ void		rrr(t_stack **a, t_stack **b, int print);
 
 /* Sorting */
 int			is_sorted(t_stack *stack);
-void		simple_sort(t_stack **a, t_stack **b);
+void		simple_sort(t_stack **a);
 void		sort_chunks(t_stack **a, t_stack **b);
-void		assign_indices(t_stack *a, int stack_size);
+void		assign_indices(t_stack *a);
 
 /* Parsing */
 void		parse_args(int argc, char **argv, t_stack **a);
