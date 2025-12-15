@@ -22,7 +22,7 @@ int	is_sorted(t_stack *stack)
 ** For each node, count how many nodes are smaller than it.
 ** This count is its index (0 to N-1).
 */
-void	assign_indices(t_stack *a, int stack_size)
+void	assign_indices(t_stack *a)
 {
 	t_stack	*ptr;
 	t_stack	*highest;
@@ -45,7 +45,7 @@ void	assign_indices(t_stack *a, int stack_size)
 }
 
 /* Hardcoded sort for 3 args (mandatory requirement for efficiency) */
-void	simple_sort(t_stack **a, t_stack **b)
+void	simple_sort(t_stack **a)
 {
 	int	max;
 
