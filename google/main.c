@@ -36,7 +36,7 @@ static void	push_swap(t_stack **a, t_stack **b, int size)
 	if (size == 2 && !is_sorted(*a))
 		sa(a, 1);
 	else if (size == 3)
-		simple_sort(a, b);
+		simple_sort(a);
 	else if (size > 3 && !is_sorted(*a))
 		sort_chunks(a, b);
 }
@@ -53,7 +53,7 @@ int	main(int argc, char **argv)
 		return (0);
 	parse_args(argc, argv, &a);
 	size = ft_lstsize(a);
-	assign_indices(a, size);
+	assign_indices(a);
 	push_swap(&a, &b, size);
 	free_stack(&a);
 	free_stack(&b);
