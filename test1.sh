@@ -11,6 +11,7 @@ for i in {1..5}; do
     ARG=$(seq 1 500 | shuf | tr '\n' ' ')
     ops=$(./push_swap $ARG | wc -l)
     echo "Run $i: $ops operations"
+    echo "the total is $ops"
     total=$((total + ops))
     
     # Verify with checker if available

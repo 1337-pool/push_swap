@@ -1,6 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*   sort_big.c                                                               */
+/*                                                        :::      ::::::::   */
+/*   sort_big.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mjaber <mjaber@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/16 18:47:16 by mjaber            #+#    #+#             */
+/*   Updated: 2025/12/16 18:49:24 by mjaber           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +64,9 @@ void	sort_chunks(t_stack **a, t_stack **b)
 	size = ft_lstsize(*a);
 	range = 0;
 	if (size > 100)
-		range = 30; // Optimized for 500
+		range = 30; /* Optimized for 500 */
 	else
-		range = 15; // Optimized for 100
+		range = 15; /* Optimized for 100 */
 	while (*a)
 	{
 		if ((*a)->index <= i)
