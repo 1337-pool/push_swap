@@ -47,26 +47,11 @@ static void	move_max_to_a(t_stack **a, t_stack **b, int max_idx)
 	pa(a, b, 1);
 }
 
-/* 
-** The Core Chunk Logic
-** 1. Push A to B in chunks (based on index).
-** 2. If index < counter, pb and rotate b (put at bottom).
-** 3. If index in range, just pb.
-** 4. Else rotate a.
-*/
-void	sort_chunks(t_stack **a, t_stack **b)
+static void	push_chunks(t_stack **a, t_stack **b, int range)
 {
 	int	i;
-	int	range;
-	int	size;
 
 	i = 0;
-	size = ft_lstsize(*a);
-	range = 0;
-	if (size > 100)
-		range = 30; /* Optimized for 500 */
-	else
-		range = 15; /* Optimized for 100 */
 	while (*a)
 	{
 		if ((*a)->index <= i)
@@ -83,6 +68,19 @@ void	sort_chunks(t_stack **a, t_stack **b)
 		else
 			ra(a, 1);
 	}
+}
+
+void	sort_chunks(t_stack **a, t_stack **b)
+{
+	int	range;
+	int	size;
+
+	size = ft_lstsize(*a);
+	if (size > 100)
+		range = 30;
+	else
+		range = 15;
+	push_chunks(a, b, range);
 	while (size > 0)
 		move_max_to_a(a, b, --size);
 }

@@ -56,18 +56,12 @@ static void	free_all(char **arr, int limit)
 	free(arr);
 }
 
-char	**ft_split(char const *s, char c)
+static int	fill_result(char const *s, char c, char **res)
 {
-	char	**res;
-	int		i;
-	int		j;
-	int		k;
+	int	i;
+	int	j;
+	int	k;
 
-	if (!s)
-		return (NULL);
-	res = malloc((count_words(s, c) + 1) * sizeof(char *));
-	if (!res)
-		return (NULL);
 	i = 0;
 	k = 0;
 	while (s[i])
@@ -81,12 +75,23 @@ char	**ft_split(char const *s, char c)
 		{
 			res[k] = dup_word(s, j, i);
 			if (!res[k++])
-			{
-				free_all(res, k - 1);
-				return (NULL);
-			}
+				return (free_all(res, k - 1), 0);
 		}
 	}
 	res[k] = NULL;
+	return (1);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**res;
+
+	if (!s)
+		return (NULL);
+	res = malloc((count_words(s, c) + 1) * sizeof(char *));
+	if (!res)
+		return (NULL);
+	if (!fill_result(s, c, res))
+		return (NULL);
 	return (res);
 }
