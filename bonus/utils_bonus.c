@@ -1,16 +1,29 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mjaber <mjaber@student.1337.ma>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/16 18:47:52 by mjaber            #+#    #+#             */
-/*   Updated: 2025/12/16 21:09:24 by mjaber           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "checker_bonus.h"
 
-#include "push_swap.h"
+void	error_exit(t_stack **a, t_stack **b)
+{
+	if (a && *a)
+		free_stack(a);
+	if (b && *b)
+		free_stack(b);
+	write(2, "Error\n", 6);
+	exit(1);
+}
+
+void	free_stack(t_stack **stack)
+{
+	t_stack	*tmp;
+
+	if (!stack || !(*stack))
+		return ;
+	while (*stack)
+	{
+		tmp = (*stack)->next;
+		free(*stack);
+		*stack = tmp;
+	}
+	*stack = NULL;
+}
 
 long	ft_atoi(const char *str)
 {
@@ -63,28 +76,4 @@ t_stack	*ft_lstnew(int value)
 	new->index = -1;
 	new->next = NULL;
 	return (new);
-}
-
-void	ft_lstadd_back(t_stack **stack, t_stack *new)
-{
-	t_stack	*tmp;
-
-	if (!stack || !new)
-		return ;
-	if (!*stack)
-	{
-		*stack = new;
-		return ;
-	}
-	tmp = ft_lstlast(*stack);
-	tmp->next = new;
-}
-
-t_stack	*ft_lstlast(t_stack *stack)
-{
-	if (!stack)
-		return (NULL);
-	while (stack->next)
-		stack = stack->next;
-	return (stack);
 }

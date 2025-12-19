@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   sort_utils.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mjaber <mjaber@student.1337.ma>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/16 18:47:27 by mjaber            #+#    #+#             */
-/*   Updated: 2025/12/16 18:47:28 by mjaber           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "push_swap.h"
+#include "checker_bonus.h"
 
 int	is_sorted(t_stack *stack)
 {
@@ -23,11 +11,6 @@ int	is_sorted(t_stack *stack)
 	return (1);
 }
 
-/*
-** Simple rank assignment O(n^2).
-** For each node, count how many nodes are smaller than it.
-** This count is its index (0 to N-1).
-*/
 void	assign_indices(t_stack *a)
 {
 	t_stack	*ptr;
@@ -48,24 +31,4 @@ void	assign_indices(t_stack *a)
 		ptr->index = count;
 		ptr = ptr->next;
 	}
-}
-
-/* Hardcoded sort for 3 args (mandatory requirement for efficiency) */
-void	simple_sort(t_stack **a)
-{
-	int	max;
-
-	if (is_sorted(*a))
-		return ;
-	max = (*a)->index;
-	if ((*a)->next->index > max)
-		max = (*a)->next->index;
-	if ((*a)->next->next->index > max)
-		max = (*a)->next->next->index;
-	if ((*a)->index == max)
-		ra(a, 1);
-	else if ((*a)->next->index == max)
-		rra(a, 1);
-	if ((*a)->index > (*a)->next->index)
-		sa(a, 1);
 }
