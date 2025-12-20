@@ -1,11 +1,13 @@
 #include "checker_bonus.h"
 
-void	error_exit(t_stack **a, t_stack **b)
+void	error_exit(t_stack **a, t_stack **b, char *line)
 {
 	if (a && *a)
 		free_stack(a);
 	if (b && *b)
 		free_stack(b);
+	if (line)
+		free(line);
 	write(2, "Error\n", 6);
 	exit(1);
 }

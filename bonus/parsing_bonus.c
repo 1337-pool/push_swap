@@ -18,12 +18,12 @@ static void	add_to_stack(t_stack **a, char *str_val)
 
 	n = ft_atoi(str_val);
 	if (n > INT_MAX || n < INT_MIN)
-		error_exit(a, NULL);
+		error_exit(a, NULL, NULL);
 	if (check_dup(*a, (int)n))
-		error_exit(a, NULL);
+		error_exit(a, NULL, NULL);
 	new_node = ft_lstnew((int)n);
 	if (!new_node)
-		error_exit(a, NULL);
+		error_exit(a, NULL, NULL);
 	ft_lstadd_back(a, new_node);
 }
 
@@ -54,7 +54,7 @@ void	parse_args(int argc, char **argv, t_stack **a)
 		{
 			if (args)
 				free_split(args);
-			error_exit(a, NULL);
+			error_exit(a, NULL, NULL);
 		}
 		j = 0;
 		while (args[j])

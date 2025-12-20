@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mjaber <mjaber@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/20 17:00:17 by mjaber            #+#    #+#             */
+/*   Updated: 2025/12/20 17:00:28 by mjaber           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "checker_bonus.h"
 
 static int	ft_strcmp(const char *s1, const char *s2)
@@ -35,7 +47,7 @@ static void	execute_instruction(t_stack **a, t_stack **b, char *line)
 	else if (ft_strcmp(line, "rrr\n") == 0)
 		rrr(a, b, 0);
 	else
-		error_exit(a, b);
+		error_exit(a, b, line);
 }
 
 static void	read_and_execute(t_stack **a, t_stack **b)

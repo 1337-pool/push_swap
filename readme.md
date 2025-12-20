@@ -216,9 +216,9 @@ Potential improvements for even better performance:
 
 ## Author
 
-**[Your Login]**  
+**mjaber**  
 42 Student  
-[Your GitHub Profile]
+Mohamed666Jaber
 
 ## License
 

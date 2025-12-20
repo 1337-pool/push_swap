@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   checker_bonus.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mjaber <mjaber@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/20 17:01:11 by mjaber            #+#    #+#             */
+/*   Updated: 2025/12/20 17:01:23 by mjaber           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CHECKER_H
 # define CHECKER_H
 
@@ -13,9 +25,6 @@ typedef struct s_stack
 	int				value;
 	int				index;
 	int				pos;
-	int				target_pos;
-	int				cost_a;
-	int				cost_b;
 	struct s_stack	*next;
 }	t_stack;
 
@@ -28,7 +37,7 @@ typedef struct s_stack
 
 /* Utils */
 long		ft_atoi(const char *str);
-void		error_exit(t_stack **a, t_stack **b);
+void		error_exit(t_stack **a, t_stack **b, char *line);
 void		free_stack(t_stack **stack);
 int			ft_lstsize(t_stack *stack);
 t_stack		*ft_lstnew(int value);

@@ -81,6 +81,8 @@ static char	*update_buffer(char *buffer)
 	int		j;
 
 	i = 0;
+	if(!*buffer)
+		free(buffer);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	if (!buffer[i])
