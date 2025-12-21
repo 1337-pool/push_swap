@@ -1,225 +1,201 @@
-# Push_swap - Chunk Algorithm Implementation
+# Push_swap
 
-*This project has been created as part of the 42 curriculum by [your_login].*
+*This project has been created as part of the 42 curriculum by mjaber.*
 
 ## Description
 
-Push_swap is a sorting algorithm project that challenges you to sort a stack of integers using a limited set of operations with the minimum number of moves possible. This implementation uses an optimized **chunk-based algorithm** that efficiently handles both small and large datasets.
+Push_swap is an algorithmic challenge focused on data sorting optimization. The project involves sorting a stack of integers using a limited set of operations, with the goal of achieving the minimum number of moves possible.
 
-The program outputs a sequence of operations that, when executed on the input stack, will sort it in ascending order.
+The program receives a list of random integers and must output the shortest sequence of instructions to sort them in ascending order using two stacks (a and b) and a predefined set of operations. This project explores fundamental concepts of algorithm complexity, optimization strategies, and efficient sorting techniques.
 
-## Features
-
-- ✅ **Chunk-based sorting** for optimal performance on large datasets
-- ✅ **Hardcoded optimizations** for small stacks (2-5 elements)
-- ✅ **Comprehensive error handling** (duplicates, overflow, invalid input)
-- ✅ **Bonus checker program** to verify sorting operations
-- ✅ **Meets all benchmarks** for 100% project completion
-
-## Performance Benchmarks
-
-| Stack Size | Operations | Target (100%) | Target (80%) |
-|------------|-----------|---------------|--------------|
-| 100 numbers | ~550-650 | < 700 | < 1100 |
-| 500 numbers | ~4500-5300 | < 5500 | < 8500 |
-| 3 numbers | ≤ 3 | - | - |
-| 5 numbers | ≤ 12 | - | - |
+The challenge lies not just in sorting the numbers, but in finding the most efficient sorting method that adapts to different input sizes and arrangements.
 
 ## Instructions
 
 ### Compilation
 
+To compile the mandatory part:
 ```bash
-# Compile push_swap
 make
+```
 
-# Compile bonus checker
+To compile the bonus part (checker program):
+```bash
 make bonus
+```
 
-# Compile both
-make all bonus
-
-# Clean object files
+To clean object files:
+```bash
 make clean
+```
 
-# Clean everything
+To remove all generated files:
+```bash
 make fclean
+```
 
-# Recompile
+To recompile:
+```bash
 make re
 ```
 
 ### Usage
 
+**Push_swap program:**
 ```bash
-# Basic usage
-./push_swap 3 2 1 5 4
-
-# With checker
-ARG="3 2 1 5 4"; ./push_swap $ARG | ./checker $ARG
-
-# Count operations
-./push_swap 3 2 1 5 4 | wc -l
-
-# Test with random numbers (requires shuf or similar)
-ARG=$(shuf -i 1-100 -n 100 | tr '\n' ' '); ./push_swap $ARG | wc -l
+./push_swap [list of integers]
 ```
+
+Examples:
+```bash
+./push_swap 2 1 3 6 5 8
+./push_swap "3 2 1"
+./push_swap 42
+```
+
+**Checker program (bonus):**
+```bash
+./push_swap [arguments] | ./checker [arguments]
+```
+
+Example:
+```bash
+ARG="4 67 3 87 23"; ./push_swap $ARG | ./checker $ARG
+```
+
+The checker will output:
+- `OK` if the stack is sorted correctly
+- `KO` if the stack is not sorted or an error occurred
+- `Error` if invalid arguments are provided
+
+### Available Operations
+
+- `sa`: swap first 2 elements of stack a
+- `sb`: swap first 2 elements of stack b
+- `ss`: sa and sb simultaneously
+- `pa`: push top element from b to a
+- `pb`: push top element from a to b
+- `ra`: rotate stack a (shift up all elements)
+- `rb`: rotate stack b (shift up all elements)
+- `rr`: ra and rb simultaneously
+- `rra`: reverse rotate stack a (shift down all elements)
+- `rrb`: reverse rotate stack b (shift down all elements)
+- `rrr`: rra and rrb simultaneously
 
 ### Error Handling
 
-The program outputs "Error\n" to stderr for:
+The program displays "Error\n" on standard error for:
 - Non-integer arguments
-- Integer overflow (outside INT_MIN to INT_MAX)
+- Numbers exceeding integer limits (INT_MIN to INT_MAX)
 - Duplicate values
-- Invalid instruction format (checker only)
+- Invalid input format
 
-```bash
-./push_swap 1 2 2 3          # Error (duplicate)
-./push_swap 1 2147483648     # Error (overflow)
-./push_swap 1 abc 3          # Error (non-integer)
-./push_swap                  # No output (no arguments)
-```
+### Performance Benchmarks
 
-## Algorithm Explanation
+The sorting algorithm achieves the following performance targets:
 
-### Small Stacks (≤ 5 elements)
+**For 100% validation:**
+- 100 random numbers: < 700 operations
+- 500 random numbers: ≤ 5500 operations
 
-**2 elements:** Simple swap if needed (1 operation max)
+**For 80% validation (minimum):**
+- Various combinations of operation counts for different input sizes
 
-**3 elements:** Hardcoded decision tree (3 operations max)
-- Handles all 6 possible permutations optimally
+## Algorithm Strategy
 
-**4-5 elements:** Push min to B, sort remainder, push back
-- Guarantees ≤ 12 operations for 5 elements
+The implementation uses a **chunk-based radix-inspired sorting approach**:
 
-### Chunk Algorithm (> 5 elements)
+1. **Small inputs (2-3 elements)**: Hardcoded optimal solutions
+2. **Medium inputs (5 elements)**: Specialized sorting with stack b
+3. **Large inputs (>5 elements)**: Chunk-based algorithm
+   - Elements are indexed (ranked) from 0 to N-1
+   - Numbers are pushed to stack b in chunks based on index ranges
+   - Larger chunks for bigger inputs (range=35 for >100 elements, range=15 otherwise)
+   - Elements are then pushed back to stack a in descending order
+   - Uses optimal rotation direction based on element position
 
-#### Phase 1: Chunking & Distribution
-1. **Create index mapping**: Assign each value its sorted position (0 = smallest)
-2. **Divide into chunks**:
-   - 100 numbers → 5 chunks (~20 per chunk)
-   - 500 numbers → 11 chunks (~45 per chunk)
-3. **Push to B by chunks**: Elements are pushed based on their sorted index
-4. **Strategic rotation**: Smaller indexed elements rotated deeper in B
-
-#### Phase 2: Reassembly
-1. Find largest element in stack B
-2. Rotate to bring it to top (using shortest path)
-3. Push to A
-4. Repeat until B is empty
-5. Result: A is sorted in ascending order
-
-### Why Chunks Work
-
-- **Reduces decisions**: Only need to check if element belongs in current chunk
-- **Limits rotations**: Each element rotated at most once per phase
-- **Optimal for medium/large sets**: Balances operation count vs complexity
-- **Predictable performance**: Operations scale linearly with size
-
-## Available Operations
-
-| Operation | Description |
-|-----------|-------------|
-| `sa` | Swap first 2 elements of stack A |
-| `sb` | Swap first 2 elements of stack B |
-| `ss` | `sa` and `sb` simultaneously |
-| `pa` | Push top of B to top of A |
-| `pb` | Push top of A to top of B |
-| `ra` | Rotate A up (first → last) |
-| `rb` | Rotate B up (first → last) |
-| `rr` | `ra` and `rb` simultaneously |
-| `rra` | Rotate A down (last → first) |
-| `rrb` | Rotate B down (last → first) |
-| `rrr` | `rra` and `rrb` simultaneously |
-
-## Files Structure
-
-```
-push_swap/
-├── push_swap.c          # Main sorting program
-├── checker_bonus.c      # Bonus checker program
-├── Makefile            # Compilation rules
-└── README.md           # This file
-```
+This approach provides O(n²) worst-case performance with excellent practical results for the required benchmarks.
 
 ## Resources
 
-### Algorithm & Complexity
-- [Sorting Algorithms Visualization](https://www.toptal.com/developers/sorting-algorithms)
-- [Big O Notation Guide](https://www.bigocheatsheet.com/)
-- [Push_swap Algorithm Tutorial](https://medium.com/@jamierobertdawson/push-swap-the-least-amount-of-moves-with-two-stacks-d1e76a71789a)
+### Classic References
+- **Big-O Notation and Algorithm Complexity**: Understanding time and space complexity
+- **Sorting Algorithms**: Quick Sort, Merge Sort, Radix Sort principles
+- **Stack Data Structures**: LIFO operations and applications
+- **Algorithm Optimization**: Trade-offs between simplicity and efficiency
 
-### 42 Resources
-- [Push_swap Subject PDF](https://cdn.intra.42.fr/pdf/pdf/960/push_swap.en.pdf)
-- [42 Norm Documentation](https://github.com/42School/norminette)
-
-### Development Tools
-- [Push_swap Visualizer](https://github.com/o-reo/push_swap_visualizer)
-- [Push_swap Tester](https://github.com/lmalki-h/push_swap_tester)
+### Recommended Reading
+- [Sorting Algorithm Visualizations](https://visualgo.net/en/sorting)
+- [Stack Data Structure (GeeksforGeeks)](https://www.geeksforgeeks.org/stack-data-structure/)
+- [Big-O Cheat Sheet](https://www.bigocheatsheet.com/)
+- 42's Push_swap subject PDF (version 10.0)
 
 ### AI Usage
-AI tools were used for:
-- **Code structure planning**: Initial algorithm design and optimization strategies
-- **Documentation**: README formatting and explanation clarity
-- **Debugging assistance**: Identifying edge cases and potential improvements
-- **Testing ideas**: Generating test cases for various input sizes
 
-All generated code was thoroughly reviewed, tested, and modified to ensure:
-- Compliance with 42 Norm
-- Complete understanding of implementation
-- Proper error handling
-- Optimal performance for benchmarks
+AI tools were used in the following capacity for this project:
 
-## Testing Examples
+**Tasks where AI was utilized:**
+- **Code review and debugging**: Identifying edge cases in parsing and error handling
+- **Algorithm research**: Understanding different sorting strategies and their trade-offs
+- **Documentation**: Structuring the README and clarifying technical explanations
+- **Testing strategy**: Generating test cases for various input sizes
 
-```bash
-# Test with 3 random numbers (should be ≤ 3 operations)
-./push_swap 2 1 0
+**Project components developed independently:**
+- Core sorting algorithm implementation (chunk-based approach)
+- Stack operations and move functions
+- Parsing logic and input validation
+- Bonus checker program with get_next_line integration
 
-# Test with 5 random numbers (should be ≤ 12 operations)
-./push_swap 5 4 3 2 1
+All AI-generated suggestions were thoroughly reviewed, tested, and modified to ensure full understanding and compliance with project requirements. The final algorithm design and optimization decisions were made independently based on benchmark testing and performance analysis.
 
-# Test with 100 random numbers
-ARG=$(shuf -i 1-500 -n 100 | tr '\n' ' ')
-./push_swap $ARG | wc -l
-./push_swap $ARG | ./checker $ARG
+## Project Structure
 
-# Test with 500 random numbers
-ARG=$(shuf -i 1-5000 -n 500 | tr '\n' ' ')
-./push_swap $ARG | wc -l
-./push_swap $ARG | ./checker $ARG
-
-# Test error cases
-./push_swap "1 2 3"          # Should work
-./push_swap 1 2 3            # Should work
-./push_swap 1 2 2            # Error
-./push_swap 1 2147483648     # Error
-./push_swap 1 -2147483649    # Error
+```
+push_swap/
+├── Makefile
+├── README.md
+├── srcs/
+│   ├── main.c              # Entry point for push_swap
+│   ├── push_swap.h         # Header file
+│   ├── parsing.c           # Argument parsing and validation
+│   ├── utils.c             # Utility functions (atoi, list operations)
+│   ├── split.c             # String splitting for space-separated args
+│   ├── moves_1.c           # Stack operations (sa, sb, ss, pa, pb)
+│   ├── moves_2.c           # Stack operations (ra, rb, rra, rrb)
+│   ├── sort_utils.c        # Sorting utilities (is_sorted, assign_indices, simple_sort)
+│   ├── sort_middle.c       # Sorting for 5 elements
+│   └── sort_big.c          # Chunk-based sorting for large inputs
+└── bonus/
+    ├── checker_bonus.c     # Checker program main
+    ├── checker_bonus.h     # Bonus header file
+    ├── get_next_line_bonus.c  # GNL for reading instructions
+    ├── parsing_bonus.c     # Bonus parsing functions
+    ├── utils_bonus.c       # Bonus utility functions
+    ├── utils2_bonus.c      # Additional utilities
+    ├── split_bonus.c       # Bonus split function
+    ├── moves1_bonus.c      # Bonus stack operations (sa-pb)
+    ├── moves2_bonus.c      # Bonus stack operations (ra-rrb)
+    ├── moves3_bonus.c      # Bonus stack operations (rrr)
+    └── sort_utils_bonus.c  # Bonus sorting utilities
 ```
 
-## Implementation Notes
+## Testing
 
-- **Memory management**: All allocations properly freed, no leaks
-- **Norm compliance**: Follows 42 coding standards
-- **Error handling**: Comprehensive validation of all inputs
-- **Optimization**: Chunk sizes tuned for benchmark requirements
-- **Bonus**: Checker validates instruction sequences
+To test the program with random numbers:
+```bash
+ARG=$(seq 1 100 | shuf | tr '\n' ' '); ./push_swap $ARG | wc -l
+ARG=$(seq 1 100 | shuf | tr '\n' ' '); ./push_swap $ARG | ./checker $ARG
+```
 
-## Future Optimizations
+For performance testing:
+```bash
+# Test with 100 numbers (should be < 700 operations)
+for i in {1..10}; do ARG=$(seq 1 100 | shuf | tr '\n' ' '); ./push_swap $ARG | wc -l; done
 
-Potential improvements for even better performance:
-- Implement combined operations (rr, rrr, ss) more aggressively
-- Use different chunk sizes based on input distribution
-- Add look-ahead logic for rotation decisions
-- Implement Turk algorithm for alternative approach
-- Dynamic chunk sizing based on actual data
+# Test with 500 numbers (should be ≤ 5500 operations)
+for i in {1..5}; do ARG=$(seq 1 500 | shuf | tr '\n' ' '); ./push_swap $ARG | wc -l; done
+```
 
-## Author
+---
 
-**mjaber**  
-42 Student  
-Mohamed666Jaber
-
-## License
-
-This project is part of the 42 school curriculum. Feel free to use it as a reference for learning purposes.
+**Note**: This project strictly adheres to the 42 Norm coding standards and includes comprehensive error handling for all edge cases.
