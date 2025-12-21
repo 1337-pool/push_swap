@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHECKER_H
-# define CHECKER_H
+#ifndef CHECKER_BONUS_H
+# define CHECKER_BONUS_H
 
 # include <unistd.h>
 # include <stdlib.h>
@@ -66,6 +66,7 @@ void		parse_args(int argc, char **argv, t_stack **a);
 char		**ft_split(char const *s, char c);
 
 /* Get Next Line */
+char		*ft_strchr(const char *s, int c);
 char		*get_next_line(int fd);
 
 #endif

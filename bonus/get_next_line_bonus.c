@@ -12,19 +12,16 @@
 
 #include "checker_bonus.h"
 
-static char	*ft_strchr(const char *s, int c)
+static int	ft_strlen_gnl(const char *s)
 {
+	int	i;
+
+	i = 0;
 	if (!s)
-		return (NULL);
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if ((char)c == '\0')
-		return ((char *)s);
-	return (NULL);
+		return (0);
+	while (s[i])
+		i++;
+	return (i);
 }
 
 static char	*ft_strjoin_gnl(char *s1, char *s2)
@@ -40,13 +37,7 @@ static char	*ft_strjoin_gnl(char *s1, char *s2)
 			return (NULL);
 		s1[0] = '\0';
 	}
-	i = 0;
-	while (s1[i])
-		i++;
-	j = 0;
-	while (s2[j])
-		j++;
-	result = malloc(i + j + 1);
+	result = malloc(ft_strlen_gnl(s1) + ft_strlen_gnl(s2) + 1);
 	if (!result)
 		return (free(s1), NULL);
 	i = -1;
@@ -97,10 +88,7 @@ static char	*update_buffer(char *buffer)
 		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	if (!buffer[i])
-		return (free(buffer), NULL);
-	i++;
-	if (!buffer[i])
+	if (!buffer[i] || !buffer[++i])
 		return (free(buffer), NULL);
 	j = 0;
 	while (buffer[i + j])
@@ -118,42 +106,29 @@ static char	*update_buffer(char *buffer)
 	return (free(buffer), new_buffer);
 }
 
-static void	cleanup_buffer(char **buffer)
-{
-	if (buffer && *buffer)
-	{
-		free(*buffer);
-		*buffer = NULL;
-	}
-}
-
 char	*get_next_line(int fd)
 {
 	static char	*buffer;
 	char		*line;
-	char		*temp;
+	char		temp[BUFFER_SIZE + 1];
 	int			bytes_read;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (cleanup_buffer(&buffer), NULL);
-	temp = malloc(BUFFER_SIZE + 1);
-	if (!temp)
-		return (cleanup_buffer(&buffer), NULL);
+		return (free(buffer), buffer = NULL, NULL);
 	bytes_read = 1;
 	while (!ft_strchr(buffer, '\n') && bytes_read > 0)
 	{
 		bytes_read = read(fd, temp, BUFFER_SIZE);
 		if (bytes_read < 0)
-			return (free(temp), cleanup_buffer(&buffer), NULL);
+			return (free(buffer), buffer = NULL, NULL);
 		temp[bytes_read] = '\0';
 		buffer = ft_strjoin_gnl(buffer, temp);
 		if (!buffer)
-			return (free(temp), NULL);
+			return (NULL);
 	}
-	free(temp);
 	line = extract_line(buffer);
 	buffer = update_buffer(buffer);
 	if (!line)
-		cleanup_buffer(&buffer);
+		return (free(buffer), buffer = NULL, NULL);
 	return (line);
 }
