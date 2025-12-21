@@ -77,7 +77,7 @@ void	sort_chunks(t_stack **a, t_stack **b)
 
 	size = ft_lstsize(*a);
 	if (size > 100)
-		range = 25;
+		range = 35;
 	else
 		range = 15;
 	push_chunks(a, b, range);

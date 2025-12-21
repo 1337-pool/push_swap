@@ -6,7 +6,7 @@
 /*   By: mjaber <mjaber@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 18:46:45 by mjaber            #+#    #+#             */
-/*   Updated: 2025/12/16 18:46:47 by mjaber           ###   ########.fr       */
+/*   Updated: 2025/12/21 00:00:00 by mjaber           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,12 @@ static int	check_dup(t_stack *a, int n)
 	return (0);
 }
 
-static void	add_to_stack(t_stack **a, char *str_val)
-{
-	long	n;
-	t_stack	*new_node;
-
-	n = ft_atoi(str_val);
-	if (n > INT_MAX || n < INT_MIN)
-		error_exit(a, NULL);
-	if (check_dup(*a, (int)n))
-		error_exit(a, NULL);
-	new_node = ft_lstnew((int)n);
-	if (!new_node)
-		error_exit(a, NULL);
-	ft_lstadd_back(a, new_node);
-}
-
 static void	free_split(char **args)
 {
 	int	i;
 
+	if (!args)
+		return ;
 	i = 0;
 	while (args[i])
 	{
@@ -52,29 +38,55 @@ static void	free_split(char **args)
 	free(args);
 }
 
+static int	validate_and_add(t_stack **a, char *str_val)
+{
+	long	n;
+	t_stack	*new_node;
+
+	n = ft_atoi(str_val);
+	if (n > INT_MAX || n < INT_MIN)
+		return (0);
+	if (check_dup(*a, (int)n))
+		return (0);
+	new_node = ft_lstnew((int)n);
+	if (!new_node)
+		return (0);
+	ft_lstadd_back(a, new_node);
+	return (1);
+}
+
+static void	process_argument(char *arg, t_stack **a)
+{
+	char	**args;
+	int		j;
+
+	args = ft_split(arg, ' ');
+	if (!args || !args[0])
+	{
+		free_split(args);
+		error_exit(a, NULL);
+	}
+	j = 0;
+	while (args[j])
+	{
+		if (!validate_and_add(a, args[j]))
+		{
+			free_split(args);
+			error_exit(a, NULL);
+		}
+		j++;
+	}
+	free_split(args);
+}
+
 void	parse_args(int argc, char **argv, t_stack **a)
 {
 	int		i;
-	int		j;
-	char	**args;
 
 	i = 1;
 	while (i < argc)
 	{
-		args = ft_split(argv[i], ' ');
-		if (!args || !args[0])
-		{
-			if (args)
-				free_split(args);
-			error_exit(a, NULL);
-		}
-		j = 0;
-		while (args[j])
-		{
-			add_to_stack(a, args[j]);
-			j++;
-		}
-		free_split(args);
+		process_argument(argv[i], a);
 		i++;
 	}
 }
