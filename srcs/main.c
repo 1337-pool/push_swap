@@ -6,7 +6,7 @@
 /*   By: mjaber <mjaber@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 18:46:09 by mjaber            #+#    #+#             */
-/*   Updated: 2025/12/16 18:46:12 by mjaber           ###   ########.fr       */
+/*   Updated: 2025/12/21 18:31:09 by mjaber           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static void	push_swap(t_stack **a, t_stack **b, int size)
 		sa(a, 1);
 	else if (size == 3)
 		simple_sort(a);
-	else if (size == 5 || size == 4)
+	else if ((size == 5 || size == 4) && !is_sorted(*a))
 		sort_middle(a, b);
-	else if (size > 3 && !is_sorted(*a))
+	else if (size > 5 && !is_sorted(*a))
 		sort_chunks(a, b);
 }
 
