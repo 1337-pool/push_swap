@@ -43,6 +43,8 @@ static void	push_swap(t_stack **a, t_stack **b, int size)
 		sa(a, 1);
 	else if (size == 3)
 		simple_sort(a);
+	else if (size == 5)
+		sort_middle(a, b);
 	else if (size > 3 && !is_sorted(*a))
 		sort_chunks(a, b);
 }

@@ -55,6 +55,7 @@ void		rrb(t_stack **b, int print);
 void		rrr(t_stack **a, t_stack **b, int print);
 
 /* Sorting */
+void		sort_middle(t_stack **a, t_stack **b);
 int			is_sorted(t_stack *stack);
 void		simple_sort(t_stack **a);
 void		sort_chunks(t_stack **a, t_stack **b);

@@ -6,7 +6,7 @@ CFLAGS = -Wall -Wextra -Werror -g -O0
 
 # Common Source Files (used by both)
 COMMON_SRC = srcs/parsing.c srcs/utils.c srcs/split.c \
-             srcs/moves_1.c srcs/moves_2.c srcs/sort_utils.c
+             srcs/moves_1.c srcs/moves_2.c srcs/sort_utils.c srcs/sort_middle.c
              
 BONUS_COMMON_SRC = bonus/parsing_bonus.c bonus/utils_bonus.c bonus/split_bonus.c \
              bonus/moves1_bonus.c bonus/moves2_bonus.c bonus/sort_utils_bonus.c \
