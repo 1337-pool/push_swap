@@ -1,4 +1,4 @@
-# Push_swap
+# Push_swap with BOGOSS ALGO
 
 *This project has been created as part of the 42 curriculum by mjaber.*
 
